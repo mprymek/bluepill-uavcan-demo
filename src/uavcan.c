@@ -88,7 +88,7 @@ void getNodeInfoHandleCanard(CanardRxTransfer* transfer)
 void uavcanInit(void)
 {
     CanardSTM32CANTimings timings;
-    int result = canardSTM32ComputeCANTimings(HAL_RCC_GetPCLK1Freq(), 1000000, &timings);
+    int result = canardSTM32ComputeCANTimings(HAL_RCC_GetPCLK1Freq(), CAN_SPEED, &timings);
     if (result)
     {
         __ASM volatile("BKPT #01");
@@ -106,7 +106,7 @@ void uavcanInit(void)
                shouldAcceptTransfer,              // Callback, see CanardShouldAcceptTransfer
                NULL);
  
-    canardSetLocalNodeID(&g_canard, 10);
+    canardSetLocalNodeID(&g_canard, NODE_ID);
 }
 
 void sendCanard(void)

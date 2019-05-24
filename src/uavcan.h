@@ -7,6 +7,9 @@
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
+#define CAN_SPEED                                                   250000
+
+#define NODE_ID                                                     50
 #define APP_VERSION_MAJOR                                           99
 #define APP_VERSION_MINOR                                           99
 #define APP_NODE_NAME                                               "skyyu.node.demo"
