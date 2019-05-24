@@ -11,11 +11,11 @@
             
 static CanardInstance g_canard;                //The library instance
 static uint8_t g_canard_memory_pool[1024];     //Arena for memory allocation, used by the library
-static uint32_t  g_uptime = 0;
 uint16_t rc_pwm[6] = {0,0,0,0,0,0};
 
 
-
+void makeNodeStatusMessage(uint8_t buffer[UAVCAN_NODE_STATUS_MESSAGE_SIZE]);
+void readUniqueID(uint8_t* out_uid);
  
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -70,15 +70,15 @@ void getNodeInfoHandleCanard(CanardRxTransfer* transfer)
         uint8_t buffer[UAVCAN_GET_NODE_INFO_RESPONSE_MAX_SIZE];
         memset(buffer,0,UAVCAN_GET_NODE_INFO_RESPONSE_MAX_SIZE);
         uint16_t len = makeNodeInfoMessage(buffer);
-        int result = canardRequestOrRespond(&g_canard,
-                                            transfer->source_node_id,
-                                            UAVCAN_GET_NODE_INFO_DATA_TYPE_SIGNATURE,
-                                            UAVCAN_GET_NODE_INFO_DATA_TYPE_ID,
-                                            &transfer->transfer_id,
-                                            transfer->priority,
-                                            CanardResponse,
-                                            &buffer[0],
-                                            (uint16_t)len);
+        canardRequestOrRespond(&g_canard,
+                               transfer->source_node_id,
+                               UAVCAN_GET_NODE_INFO_DATA_TYPE_SIGNATURE,
+                               UAVCAN_GET_NODE_INFO_DATA_TYPE_ID,
+                               &transfer->transfer_id,
+                               transfer->priority,
+                               CanardResponse,
+                               &buffer[0],
+                               (uint16_t)len);
 }
 
 
@@ -250,8 +250,8 @@ void showRcpwmonUart()
 {
     char str[5];
     itoa(rc_pwm[0],str,10);
-    HAL_UART_Transmit(&huart1,str,5,0xffff);
-    HAL_UART_Transmit(&huart1,"\n",2,0xffff);
+    HAL_UART_Transmit(&huart1,(uint8_t*)str,5,0xffff);
+    HAL_UART_Transmit(&huart1,(uint8_t*)"\n",2,0xffff);
 }
 
 
@@ -260,12 +260,12 @@ void showRcpwmonUart()
 
 param_t parameters[] =
 {
-    {"param0", 0, 10,20, 15},
-    {"param1", 1, 0, 100, 25},
-    {"param2", 2, 2, 8,  3 },
+    {(uint8_t*)"param0", 0, 10,20, 15},
+    {(uint8_t*)"param1", 1, 0, 100, 25},
+    {(uint8_t*)"param2", 2, 2, 8,  3 },
 };
 
-inline param_t * getParamByIndex(uint16_t index)
+param_t * getParamByIndex(uint16_t index)
 {
   if(index >= ARRAY_SIZE(parameters)) 
   {
@@ -275,7 +275,7 @@ inline param_t * getParamByIndex(uint16_t index)
   return &parameters[index];
 }
 
-inline param_t * getParamByName(uint8_t * name)
+param_t * getParamByName(uint8_t * name)
 {
   for(uint16_t i = 0; i < ARRAY_SIZE(parameters); i++)
   {
@@ -389,14 +389,14 @@ void getsetHandleCanard(CanardRxTransfer* transfer)
 
     uint8_t  buffer[64] = "";
     uint16_t len = encodeParamCanard(p, buffer);
-    int result = canardRequestOrRespond(&g_canard,
-                                        transfer->source_node_id,
-                                        UAVCAN_PROTOCOL_PARAM_GETSET_SIGNATURE,
-                                        UAVCAN_PROTOCOL_PARAM_GETSET_ID,
-                                        &transfer->transfer_id,
-                                        transfer->priority,
-                                        CanardResponse,
-                                        &buffer[0],
-                                        (uint16_t)len);
+    canardRequestOrRespond(&g_canard,
+                           transfer->source_node_id,
+                           UAVCAN_PROTOCOL_PARAM_GETSET_SIGNATURE,
+                           UAVCAN_PROTOCOL_PARAM_GETSET_ID,
+                           &transfer->transfer_id,
+                           transfer->priority,
+                           CanardResponse,
+                           &buffer[0],
+                           (uint16_t)len);
   
 }

@@ -52,6 +52,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
+#include "uavcan.h"
+#include "canard.h"
 #include "cmsis_os.h"
 #include "stm32f1xx_hal.h"
 

@@ -79,6 +79,7 @@ void getNodeInfoHandleCanard(CanardRxTransfer* transfer);
 
 uint16_t makeNodeInfoMessage(uint8_t buffer[UAVCAN_GET_NODE_INFO_RESPONSE_MAX_SIZE]);
 
+void uavcanInit(void);
 
 
 static const uint8_t  sine_wave[256] = 
