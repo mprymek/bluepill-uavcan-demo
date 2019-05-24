@@ -170,7 +170,7 @@ void StartTask02(void const * argument)
     sendCanard();
     receiveCanard();
     spinCanard();
-    publishCanard();
+    //publishCanard();
   }
 }
 
